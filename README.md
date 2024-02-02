@@ -1,6 +1,6 @@
 # Hand Refiner w/ MeshGraphormer for InvokeAI
 
-A quick implementation of hand refining with Microsoft's Meshgraphormer for InvokeAI.
+A quick implementation of hand refining with [Microsoft's Meshgraphormer](https://github.com/microsoft/MeshGraphormer) for [InvokeAI](https://github.com/invoke-ai/InvokeAI).
 
 ![MeshGraphormer Preview](./assets/preview.jpg)
 
