@@ -12,7 +12,7 @@ config = InvokeAIAppConfig.get_config()
 
 MESH_GRAPHORMER_MODEL_PATHS = {
     "graphormer_hand_state_dict.bin": {
-        "url": "https://datarelease.blob.core.windows.net/metro/models/graphormer_hand_state_dict.bin?download=true",
+        "url": "https://datarelease.blob.core.windows.net/metro/models/graphormer_hand_state_dict.bin",
         "local": "any/annotators/mesh_graphormer/graphormer_hand_state_dict.bin",
     },
     "hrnetv2_w64_imagenet_pretrained.pth": {
