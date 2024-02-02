@@ -1,3 +1,6 @@
+import gc
+
+import torch
 from invokeai.app.invocations.baseinvocation import (
     BaseInvocation,
     BaseInvocationOutput,
@@ -11,9 +14,12 @@ from invokeai.app.invocations.baseinvocation import (
 from invokeai.app.invocations.primitives import ImageField
 from invokeai.app.services.image_records.image_records_common import ImageCategory, ResourceOrigin
 from invokeai.app.shared.fields import FieldDescriptions
+from invokeai.backend.util.devices import choose_torch_device
 from PIL import Image
 
 from .node import MeshGraphormerDetector
+
+meshgraphormer_detector = None
 
 
 @invocation_output("meshgraphormer_output")
@@ -39,9 +45,13 @@ class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
     image: ImageField = InputField(description="The image to process")
     resolution: int = InputField(default=512, ge=64, multiple_of=64, description=FieldDescriptions.image_res)
     mask_padding: int = InputField(default=30, ge=0, description="Amount to pad the hand mask by")
+    offload: bool = InputField(default=False, description="Offload model after usage")
 
     def run_processor(self, image: Image.Image):
-        meshgraphormer_detector = MeshGraphormerDetector.load_detector()
+        global meshgraphormer_detector
+
+        if not meshgraphormer_detector:
+            meshgraphormer_detector = MeshGraphormerDetector.load_detector()
 
         if image.mode == "RGBA":
             image = image.convert("RGB")
@@ -53,6 +63,13 @@ class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
         image = image.resize((self.resolution, new_height))
 
         processed_image, mask = meshgraphormer_detector(image=image, mask_bbox_padding=self.mask_padding)
+
+        if self.offload:
+            meshgraphormer_detector = None
+            gc.collect()
+            if choose_torch_device() == "cuda":
+                torch.cuda.empty_cache()
+
         return processed_image, mask
 
     def invoke(self, context: InvocationContext) -> HandDepthOutput:

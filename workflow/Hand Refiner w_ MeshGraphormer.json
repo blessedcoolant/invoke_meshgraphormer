@@ -32,7 +32,7 @@
     "category": "user",
     "version": "2.0.0"
   },
-  "id": "2f83f439-9874-4f52-8e01-8087d603217d",
+  "id": "b2d225ac-2d78-49a6-9368-80924de151b0",
   "nodes": [
     {
       "id": "5085aea3-ef64-4052-ac5c-f3b1bdcca04a",
@@ -1060,149 +1060,39 @@
       "height": 225
     },
     {
-      "id": "aad1d634-a208-42c7-9263-027847c7f630",
-      "type": "invocation",
-      "data": {
-        "id": "aad1d634-a208-42c7-9263-027847c7f630",
-        "type": "hand_depth_mesh_graphormer_image_processor",
-        "version": "1.0.0",
-        "label": "",
-        "notes": "",
-        "isOpen": true,
-        "isIntermediate": true,
-        "useCache": true,
-        "inputs": {
-          "metadata": {
-            "id": "007891bd-4240-4031-b5f4-e34d43ae535f",
-            "name": "metadata",
-            "type": {
-              "name": "MetadataField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
-            "fieldKind": "input"
-          },
-          "image": {
-            "id": "243d9312-cf57-4379-8342-27bfc654674f",
-            "name": "image",
-            "type": {
-              "name": "ImageField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
-            "fieldKind": "input"
-          },
-          "resolution": {
-            "id": "b6d76263-adec-435e-97b0-26b98c9d865f",
-            "name": "resolution",
-            "type": {
-              "name": "IntegerField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
-            "fieldKind": "input",
-            "value": 512
-          },
-          "mask_padding": {
-            "id": "d2222451-4338-4131-b482-109411415247",
-            "name": "mask_padding",
-            "type": {
-              "name": "IntegerField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
-            "fieldKind": "input",
-            "value": 30
-          }
-        },
-        "outputs": {
-          "image": {
-            "id": "ca7d5c9f-468a-4f04-aa94-46d7e01e85fb",
-            "name": "image",
-            "type": {
-              "name": "ImageField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "fieldKind": "output"
-          },
-          "mask": {
-            "id": "c8ffc916-7005-4180-9e77-2d3e15b7533d",
-            "name": "mask",
-            "type": {
-              "name": "ImageField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "fieldKind": "output"
-          },
-          "width": {
-            "id": "0cbf1e23-264a-476d-a38a-f3942532ff77",
-            "name": "width",
-            "type": {
-              "name": "IntegerField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "fieldKind": "output"
-          },
-          "height": {
-            "id": "7b957c9c-7fd6-4676-a1a5-d60a0db04485",
-            "name": "height",
-            "type": {
-              "name": "IntegerField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "fieldKind": "output"
-          }
-        }
-      },
-      "position": {
-        "x": 1800,
-        "y": 475
-      },
-      "width": 320,
-      "height": 320
-    },
-    {
       "id": "2c5594f9-420a-42ea-986f-b8aa0a50d9c6",
       "type": "invocation",
       "data": {
         "id": "2c5594f9-420a-42ea-986f-b8aa0a50d9c6",
         "type": "controlnet",
-        "version": "1.1.1",
         "label": "",
-        "notes": "",
         "isOpen": true,
+        "notes": "",
         "isIntermediate": true,
         "useCache": true,
+        "version": "1.1.1",
         "inputs": {
           "image": {
             "id": "6bb2a8de-de3d-4001-aebb-4e9fed017a9d",
             "name": "image",
-            "type": {
-              "name": "ImageField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
+            "fieldKind": "input",
             "label": "",
-            "fieldKind": "input"
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "ImageField"
+            }
           },
           "control_model": {
             "id": "78c05c11-bfd3-45e8-8645-805a5808ecb8",
             "name": "control_model",
-            "type": {
-              "name": "ControlNetModelField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
             "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "ControlNetModelField"
+            },
             "value": {
               "model_name": "depth",
               "base_model": "sd-1"
@@ -1211,61 +1101,61 @@
           "control_weight": {
             "id": "39b0d07f-8019-46b5-af73-86a76df579b6",
             "name": "control_weight",
-            "type": {
-              "name": "FloatField",
-              "isCollection": false,
-              "isCollectionOrScalar": true
-            },
-            "label": "",
             "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": true,
+              "name": "FloatField"
+            },
             "value": 1
           },
           "begin_step_percent": {
             "id": "321ad979-c1f6-4f8d-b758-56a5cb692408",
             "name": "begin_step_percent",
-            "type": {
-              "name": "FloatField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
             "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "FloatField"
+            },
             "value": 0
           },
           "end_step_percent": {
             "id": "e66e7435-6981-4f28-9ea4-091d2ca3cf7d",
             "name": "end_step_percent",
-            "type": {
-              "name": "FloatField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
             "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "FloatField"
+            },
             "value": 1
           },
           "control_mode": {
             "id": "33a2d8a1-0624-43be-96b9-4344fabcbbc3",
             "name": "control_mode",
-            "type": {
-              "name": "EnumField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
             "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "EnumField"
+            },
             "value": "balanced"
           },
           "resize_mode": {
             "id": "1d0f0adb-415c-43f6-bb7d-6e2ae5811b78",
             "name": "resize_mode",
-            "type": {
-              "name": "EnumField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
             "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "EnumField"
+            },
             "value": "just_resize"
           }
         },
@@ -1273,12 +1163,12 @@
           "control": {
             "id": "e8733328-3a27-4bb5-8d05-87b666f9659f",
             "name": "control",
+            "fieldKind": "output",
             "type": {
-              "name": "ControlField",
               "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "fieldKind": "output"
+              "isCollectionOrScalar": false,
+              "name": "ControlField"
+            }
           }
         }
       },
@@ -1295,6 +1185,97 @@
       "data": {
         "id": "18c0e801-6cab-4d00-bd01-8cce1e418d25",
         "type": "create_denoise_mask",
+        "label": "",
+        "isOpen": true,
+        "notes": "",
+        "isIntermediate": true,
+        "useCache": true,
+        "version": "1.0.0",
+        "inputs": {
+          "vae": {
+            "id": "7267642c-117e-4219-b352-f37152dc3f08",
+            "name": "vae",
+            "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "VaeField"
+            }
+          },
+          "image": {
+            "id": "e172e0a4-548d-48c0-91cb-927d5904e0d4",
+            "name": "image",
+            "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "ImageField"
+            }
+          },
+          "mask": {
+            "id": "30e413fc-177b-4490-b07b-0f2a623b1f06",
+            "name": "mask",
+            "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "ImageField"
+            }
+          },
+          "tiled": {
+            "id": "5a7f7b49-46b5-4820-9026-257d9d7c20bc",
+            "name": "tiled",
+            "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "BooleanField"
+            },
+            "value": false
+          },
+          "fp32": {
+            "id": "5dabc04e-c1f2-433f-a6d2-23ec99c3d9f6",
+            "name": "fp32",
+            "fieldKind": "input",
+            "label": "",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "BooleanField"
+            },
+            "value": false
+          }
+        },
+        "outputs": {
+          "denoise_mask": {
+            "id": "220ce097-cf73-4b7d-ab01-c1424bdae151",
+            "name": "denoise_mask",
+            "fieldKind": "output",
+            "type": {
+              "isCollection": false,
+              "isCollectionOrScalar": false,
+              "name": "DenoiseMaskField"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 2200,
+        "y": 700
+      },
+      "width": 320,
+      "height": 267
+    },
+    {
+      "id": "80b8c8af-717c-483b-8a60-e5df35417315",
+      "type": "invocation",
+      "data": {
+        "id": "80b8c8af-717c-483b-8a60-e5df35417315",
+        "type": "hand_depth_mesh_graphormer_image_processor",
         "version": "1.0.0",
         "label": "",
         "notes": "",
@@ -1302,11 +1283,11 @@
         "isIntermediate": true,
         "useCache": true,
         "inputs": {
-          "vae": {
-            "id": "7267642c-117e-4219-b352-f37152dc3f08",
-            "name": "vae",
+          "metadata": {
+            "id": "821c68f2-97e7-4e9f-8ef1-4d8ae6296ba2",
+            "name": "metadata",
             "type": {
-              "name": "VaeField",
+              "name": "MetadataField",
               "isCollection": false,
               "isCollectionOrScalar": false
             },
@@ -1314,7 +1295,7 @@
             "fieldKind": "input"
           },
           "image": {
-            "id": "e172e0a4-548d-48c0-91cb-927d5904e0d4",
+            "id": "b871c57b-44aa-49d2-af8d-27c9f2139cfd",
             "name": "image",
             "type": {
               "name": "ImageField",
@@ -1324,32 +1305,33 @@
             "label": "",
             "fieldKind": "input"
           },
-          "mask": {
-            "id": "30e413fc-177b-4490-b07b-0f2a623b1f06",
-            "name": "mask",
+          "resolution": {
+            "id": "35645824-5a92-4ef9-929f-90dc0ada0214",
+            "name": "resolution",
             "type": {
-              "name": "ImageField",
-              "isCollection": false,
-              "isCollectionOrScalar": false
-            },
-            "label": "",
-            "fieldKind": "input"
-          },
-          "tiled": {
-            "id": "5a7f7b49-46b5-4820-9026-257d9d7c20bc",
-            "name": "tiled",
-            "type": {
-              "name": "BooleanField",
+              "name": "IntegerField",
               "isCollection": false,
               "isCollectionOrScalar": false
             },
             "label": "",
             "fieldKind": "input",
-            "value": false
+            "value": 512
           },
-          "fp32": {
-            "id": "5dabc04e-c1f2-433f-a6d2-23ec99c3d9f6",
-            "name": "fp32",
+          "mask_padding": {
+            "id": "9355cc10-89db-4887-9fe9-ba52071ee49b",
+            "name": "mask_padding",
+            "type": {
+              "name": "IntegerField",
+              "isCollection": false,
+              "isCollectionOrScalar": false
+            },
+            "label": "",
+            "fieldKind": "input",
+            "value": 30
+          },
+          "offload": {
+            "id": "a71d7eb4-e0e4-4945-ad9c-9994d228ed98",
+            "name": "offload",
             "type": {
               "name": "BooleanField",
               "isCollection": false,
@@ -1361,11 +1343,41 @@
           }
         },
         "outputs": {
-          "denoise_mask": {
-            "id": "220ce097-cf73-4b7d-ab01-c1424bdae151",
-            "name": "denoise_mask",
+          "image": {
+            "id": "ab7e02dd-b3d0-418e-9b92-619db055f56f",
+            "name": "image",
             "type": {
-              "name": "DenoiseMaskField",
+              "name": "ImageField",
+              "isCollection": false,
+              "isCollectionOrScalar": false
+            },
+            "fieldKind": "output"
+          },
+          "mask": {
+            "id": "6b1c1505-2d6d-48d6-9212-46c14c72acf3",
+            "name": "mask",
+            "type": {
+              "name": "ImageField",
+              "isCollection": false,
+              "isCollectionOrScalar": false
+            },
+            "fieldKind": "output"
+          },
+          "width": {
+            "id": "70c84909-3e9c-494e-a3aa-d698c16ef42f",
+            "name": "width",
+            "type": {
+              "name": "IntegerField",
+              "isCollection": false,
+              "isCollectionOrScalar": false
+            },
+            "fieldKind": "output"
+          },
+          "height": {
+            "id": "18f3f09c-658c-448d-b4b1-c61080285b72",
+            "name": "height",
+            "type": {
+              "name": "IntegerField",
               "isCollection": false,
               "isCollectionOrScalar": false
             },
@@ -1374,11 +1386,11 @@
         }
       },
       "position": {
-        "x": 2200,
-        "y": 700
+        "x": 1800,
+        "y": 525
       },
       "width": 320,
-      "height": 267
+      "height": 362
     }
   ],
   "edges": [
@@ -1455,14 +1467,6 @@
       "targetHandle": "vae"
     },
     {
-      "id": "reactflow__edge-58c957f5-0d01-41fc-a803-b2bbf0413d4fimage-aad1d634-a208-42c7-9263-027847c7f630image",
-      "type": "default",
-      "source": "58c957f5-0d01-41fc-a803-b2bbf0413d4f",
-      "target": "aad1d634-a208-42c7-9263-027847c7f630",
-      "sourceHandle": "image",
-      "targetHandle": "image"
-    },
-    {
       "id": "reactflow__edge-7d8bf987-284f-413a-b2fd-d825445a5d6cconditioning-472dccce-d8ac-4b17-8a7c-e137a73f0ba4positive_conditioning",
       "type": "default",
       "source": "7d8bf987-284f-413a-b2fd-d825445a5d6c",
@@ -1503,28 +1507,12 @@
       "targetHandle": "control"
     },
     {
-      "id": "reactflow__edge-aad1d634-a208-42c7-9263-027847c7f630image-2c5594f9-420a-42ea-986f-b8aa0a50d9c6image",
-      "type": "default",
-      "source": "aad1d634-a208-42c7-9263-027847c7f630",
-      "target": "2c5594f9-420a-42ea-986f-b8aa0a50d9c6",
-      "sourceHandle": "image",
-      "targetHandle": "image"
-    },
-    {
       "id": "reactflow__edge-58c957f5-0d01-41fc-a803-b2bbf0413d4fimage-18c0e801-6cab-4d00-bd01-8cce1e418d25image",
       "type": "default",
       "source": "58c957f5-0d01-41fc-a803-b2bbf0413d4f",
       "target": "18c0e801-6cab-4d00-bd01-8cce1e418d25",
       "sourceHandle": "image",
       "targetHandle": "image"
-    },
-    {
-      "id": "reactflow__edge-aad1d634-a208-42c7-9263-027847c7f630mask-18c0e801-6cab-4d00-bd01-8cce1e418d25mask",
-      "type": "default",
-      "source": "aad1d634-a208-42c7-9263-027847c7f630",
-      "target": "18c0e801-6cab-4d00-bd01-8cce1e418d25",
-      "sourceHandle": "mask",
-      "targetHandle": "mask"
     },
     {
       "id": "reactflow__edge-18c0e801-6cab-4d00-bd01-8cce1e418d25denoise_mask-472dccce-d8ac-4b17-8a7c-e137a73f0ba4denoise_mask",
@@ -1557,6 +1545,30 @@
       "target": "18c0e801-6cab-4d00-bd01-8cce1e418d25",
       "sourceHandle": "vae",
       "targetHandle": "vae"
+    },
+    {
+      "id": "reactflow__edge-58c957f5-0d01-41fc-a803-b2bbf0413d4fimage-80b8c8af-717c-483b-8a60-e5df35417315image",
+      "type": "default",
+      "source": "58c957f5-0d01-41fc-a803-b2bbf0413d4f",
+      "target": "80b8c8af-717c-483b-8a60-e5df35417315",
+      "sourceHandle": "image",
+      "targetHandle": "image"
+    },
+    {
+      "id": "reactflow__edge-80b8c8af-717c-483b-8a60-e5df35417315image-2c5594f9-420a-42ea-986f-b8aa0a50d9c6image",
+      "type": "default",
+      "source": "80b8c8af-717c-483b-8a60-e5df35417315",
+      "target": "2c5594f9-420a-42ea-986f-b8aa0a50d9c6",
+      "sourceHandle": "image",
+      "targetHandle": "image"
+    },
+    {
+      "id": "reactflow__edge-80b8c8af-717c-483b-8a60-e5df35417315mask-18c0e801-6cab-4d00-bd01-8cce1e418d25mask",
+      "type": "default",
+      "source": "80b8c8af-717c-483b-8a60-e5df35417315",
+      "target": "18c0e801-6cab-4d00-bd01-8cce1e418d25",
+      "sourceHandle": "mask",
+      "targetHandle": "mask"
     }
   ]
 }
