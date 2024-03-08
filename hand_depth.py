@@ -1,7 +1,10 @@
 import gc
 
 import torch
-from invokeai.app.invocations.baseinvocation import (
+from invokeai.app.invocations.fields import FieldDescriptions
+from invokeai.app.invocations.primitives import ImageField
+from invokeai.backend.util.devices import choose_torch_device
+from invokeai.invocation_api import (
     BaseInvocation,
     BaseInvocationOutput,
     InputField,
@@ -11,10 +14,6 @@ from invokeai.app.invocations.baseinvocation import (
     invocation,
     invocation_output,
 )
-from invokeai.app.invocations.primitives import ImageField
-from invokeai.app.services.image_records.image_records_common import ImageCategory, ResourceOrigin
-from invokeai.app.shared.fields import FieldDescriptions
-from invokeai.backend.util.devices import choose_torch_device
 from PIL import Image
 
 from .node import MeshGraphormerDetector
@@ -37,7 +36,7 @@ class HandDepthOutput(BaseInvocationOutput):
     title="Hand Depth w/ MeshGraphormer",
     tags=["controlnet", "depth", "mesh graphormer", "hand refiner", "preprocessor"],
     category="controlnet",
-    version="1.0.0",
+    version="1.0.1",
 )
 class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
     """Generate hand depth maps to inpaint with using ControlNet"""
@@ -76,27 +75,8 @@ class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
         raw_image = context.services.images.get_pil_image(self.image.image_name)
         processed_image, mask = self.run_processor(raw_image)
 
-        image_dto = context.services.images.create(
-            image=processed_image,
-            image_origin=ResourceOrigin.INTERNAL,
-            image_category=ImageCategory.CONTROL,
-            session_id=context.graph_execution_state_id,
-            node_id=self.id,
-            is_intermediate=self.is_intermediate,
-            metadata=self.metadata,
-            workflow=context.workflow,
-        )
-
-        mask_dto = context.services.images.create(
-            image=mask,
-            image_origin=ResourceOrigin.INTERNAL,
-            image_category=ImageCategory.MASK,
-            session_id=context.graph_execution_state_id,
-            node_id=self.id,
-            is_intermediate=self.is_intermediate,
-            metadata=self.metadata,
-            workflow=context.workflow,
-        )
+        image_dto = context.images.save(processed_image)
+        mask_dto = context.images.save(mask)
 
         processed_image_field = ImageField(image_name=image_dto.image_name)
         processed_mask_field = ImageField(image_name=mask_dto.image_name)
