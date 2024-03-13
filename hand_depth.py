@@ -72,7 +72,7 @@ class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
         return processed_image, mask
 
     def invoke(self, context: InvocationContext) -> HandDepthOutput:
-        raw_image = context.services.images.get_pil_image(self.image.image_name)
+        raw_image = context.images.get_pil_image(self.image.image_name)
         processed_image, mask = self.run_processor(raw_image)
 
         image_dto = context.images.save(processed_image)
