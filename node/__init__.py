@@ -1,14 +1,14 @@
 import pathlib
 
 import numpy as np
-from invokeai.app.services.config.config_default import InvokeAIAppConfig
+from invokeai.app.services.config.config_default import get_config
+from invokeai.app.util.download_with_progress import download_with_progress_bar
 from invokeai.backend.util.devices import choose_torch_device
-from invokeai.backend.util.util import download_with_progress_bar
 from PIL import Image, ImageOps
 
 from .detector import MeshGraphormer
 
-config = InvokeAIAppConfig.get_config()
+config = get_config()
 
 MESH_GRAPHORMER_MODEL_PATHS = {
     "graphormer_hand_state_dict.bin": {
