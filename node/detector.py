@@ -8,7 +8,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import torch
-from invokeai.app.services.config.config_default import InvokeAIAppConfig
+from invokeai.app.services.config.config_default import get_config
 from invokeai.backend.util.devices import choose_torch_device
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
@@ -40,7 +40,7 @@ def set_seed(seed):
 
 class MeshGraphormer:
     def __init__(self, hand_checkpoint, hrnet_checkpoint, args=args) -> None:
-        self.invoke_config = InvokeAIAppConfig.get_config()
+        self.invoke_config = get_config()
         set_seed(88)
         self.device = choose_torch_device()
 
@@ -67,7 +67,7 @@ class MeshGraphormer:
                 config_class, model_class = BertConfig, Graphormer
                 config = config_class.from_pretrained(
                     pathlib.Path(
-                        self.invoke_config.root.as_posix()
+                        self.invoke_config.root_path.as_posix()
                         / self.invoke_config.custom_nodes_dir
                         / "invoke_meshgraphormer/mesh_graphormer/modeling/bert/bert-base-uncased/"
                     ).as_posix()

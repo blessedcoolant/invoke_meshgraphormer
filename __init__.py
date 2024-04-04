@@ -1,1 +1,1 @@
-from .hand_depth import HandDepthMeshGraphormerProcessor
+from .hand_depth import HandDepthMeshGraphormerProcessor  # noqa F401
