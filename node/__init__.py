@@ -33,7 +33,9 @@ class MeshGraphormerDetector:
         )
         if not MESH_GRAPHORMER_HAND_MODEL.exists():
             download_with_progress_bar(
-                MESH_GRAPHORMER_MODEL_PATHS["graphormer_hand_state_dict.bin"]["url"], MESH_GRAPHORMER_HAND_MODEL
+                "graphormer_hand_state_dict.bin",
+                MESH_GRAPHORMER_MODEL_PATHS["graphormer_hand_state_dict.bin"]["url"],
+                MESH_GRAPHORMER_HAND_MODEL,
             )
 
         HRNET_V2_MODEL = pathlib.Path(
@@ -41,7 +43,9 @@ class MeshGraphormerDetector:
         )
         if not HRNET_V2_MODEL.exists():
             download_with_progress_bar(
-                MESH_GRAPHORMER_MODEL_PATHS["hrnetv2_w64_imagenet_pretrained.pth"]["url"], HRNET_V2_MODEL
+                "hrnetv2_w64_imagenet_pretrained.pth",
+                MESH_GRAPHORMER_MODEL_PATHS["hrnetv2_w64_imagenet_pretrained.pth"]["url"],
+                HRNET_V2_MODEL,
             )
 
         hand_checkpoint = MESH_GRAPHORMER_HAND_MODEL.as_posix()
