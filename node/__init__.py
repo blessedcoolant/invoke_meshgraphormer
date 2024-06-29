@@ -1,63 +1,32 @@
-import pathlib
+from typing import OrderedDict
 
 import numpy as np
+import torch
 from invokeai.app.services.config.config_default import get_config
-from invokeai.app.util.download_with_progress import download_with_progress_bar
-from invokeai.backend.util.devices import choose_torch_device
 from PIL import Image, ImageOps
 
 from .detector import MeshGraphormer
 
 config = get_config()
 
-MESH_GRAPHORMER_MODEL_PATHS = {
-    "graphormer_hand_state_dict.bin": {
-        "url": "https://datarelease.blob.core.windows.net/metro/models/graphormer_hand_state_dict.bin",
-        "local": "any/annotators/mesh_graphormer/graphormer_hand_state_dict.bin",
-    },
-    "hrnetv2_w64_imagenet_pretrained.pth": {
-        "url": "https://datarelease.blob.core.windows.net/metro/models/hrnetv2_w64_imagenet_pretrained.pth",
-        "local": "any/annotators/mesh_graphormer/hrnetv2_w64_imagenet_pretrained.pth",
-    },
-}
-
 
 class MeshGraphormerDetector:
-    def __init__(self, detector):
+    def __init__(self, detector: MeshGraphormer, device=torch.device):
         self.detector = detector
+        self.device = device
 
-    @classmethod
-    def load_detector(cls):
-        MESH_GRAPHORMER_HAND_MODEL = pathlib.Path(
-            config.models_path / MESH_GRAPHORMER_MODEL_PATHS["graphormer_hand_state_dict.bin"]["local"]
-        )
-        if not MESH_GRAPHORMER_HAND_MODEL.exists():
-            download_with_progress_bar(
-                "graphormer_hand_state_dict.bin",
-                MESH_GRAPHORMER_MODEL_PATHS["graphormer_hand_state_dict.bin"]["url"],
-                MESH_GRAPHORMER_HAND_MODEL,
-            )
-
-        HRNET_V2_MODEL = pathlib.Path(
-            config.models_path / MESH_GRAPHORMER_MODEL_PATHS["hrnetv2_w64_imagenet_pretrained.pth"]["local"]
-        )
-        if not HRNET_V2_MODEL.exists():
-            download_with_progress_bar(
-                "hrnetv2_w64_imagenet_pretrained.pth",
-                MESH_GRAPHORMER_MODEL_PATHS["hrnetv2_w64_imagenet_pretrained.pth"]["url"],
-                HRNET_V2_MODEL,
-            )
-
-        hand_checkpoint = MESH_GRAPHORMER_HAND_MODEL.as_posix()
-        hrnet_checkpoint = HRNET_V2_MODEL.as_posix()
-        detector = MeshGraphormer(hand_checkpoint, hrnet_checkpoint)
-        return cls(detector)
+    @staticmethod
+    def load_detector(
+        mesh_graphormer_hand_model_dict: OrderedDict[str, torch.Tensor],
+        hrnet_v2_model_path: OrderedDict[str, torch.Tensor],
+    ) -> MeshGraphormer:
+        detector = MeshGraphormer(mesh_graphormer_hand_model_dict, hrnet_v2_model_path)
+        return detector
 
     def to(self):
-        device = choose_torch_device()
-        self.detector._model.to(device)
-        self.detector.mano_model.to(device)
-        self.detector.mano_model.layer.to(device)
+        self.detector._model.to(self.device)
+        self.detector.mano_model.to(self.device)
+        self.detector.mano_model.layer.to(self.device)
         return self
 
     def __call__(self, image: Image.Image, mask_bbox_padding=30, **kwargs):

@@ -1,8 +1,8 @@
-import gc
 import pathlib
 import random
 from argparse import Namespace
 from pathlib import Path
+from typing import OrderedDict
 
 import cv2
 import mediapipe as mp
@@ -39,7 +39,12 @@ def set_seed(seed):
 
 
 class MeshGraphormer:
-    def __init__(self, hand_checkpoint, hrnet_checkpoint, args=args) -> None:
+    def __init__(
+        self,
+        hand_checkpoint: OrderedDict[str, torch.Tensor],
+        hrnet_checkpoint: OrderedDict[str, torch.Tensor],
+        args=args,
+    ) -> None:
         self.invoke_config = get_config()
         set_seed(88)
         self.device = choose_torch_device()
@@ -59,64 +64,51 @@ class MeshGraphormer:
         # which encoder block to have graph convs
         which_blk_graph = [int(item) for item in [0, 0, 1]]
 
-        if hand_checkpoint is not None and hand_checkpoint != "None" and "state_dict" not in hand_checkpoint:
-            _model = torch.load(hand_checkpoint)
-        else:
-            # init three transformer-encoder blocks in a loop
-            for i in range(len(output_feat_dim)):
-                config_class, model_class = BertConfig, Graphormer
-                config = config_class.from_pretrained(
-                    pathlib.Path(
-                        self.invoke_config.root_path.as_posix()
-                        / self.invoke_config.custom_nodes_dir
-                        / "invoke_meshgraphormer/mesh_graphormer/modeling/bert/bert-base-uncased/"
-                    ).as_posix()
-                )
+        for i in range(len(output_feat_dim)):
+            config_class, model_class = BertConfig, Graphormer
+            config = config_class.from_pretrained(
+                pathlib.Path(
+                    self.invoke_config.root_path.as_posix()
+                    / self.invoke_config.custom_nodes_dir
+                    / "invoke_meshgraphormer/mesh_graphormer/modeling/bert/bert-base-uncased/"
+                ).as_posix()
+            )
 
-                config.output_attentions = False
-                config.img_feature_dim = input_feat_dim[i]
-                config.output_feature_dim = output_feat_dim[i]
-                args.hidden_size = hidden_feat_dim[i]
-                args.intermediate_size = int(args.hidden_size * 2)
+            config.output_attentions = False
+            config.img_feature_dim = input_feat_dim[i]
+            config.output_feature_dim = output_feat_dim[i]
+            args.hidden_size = hidden_feat_dim[i]
+            args.intermediate_size = int(args.hidden_size * 2)
 
-                if which_blk_graph[i] == 1:
-                    config.graph_conv = True
-                else:
-                    config.graph_conv = False
+            if which_blk_graph[i] == 1:
+                config.graph_conv = True
+            else:
+                config.graph_conv = False
 
-                config.mesh_type = "hand"
+            config.mesh_type = "hand"
 
-                # update model structure if specified in arguments
-                update_params = ["num_hidden_layers", "hidden_size", "num_attention_heads", "intermediate_size"]
-                for idx, param in enumerate(update_params):
-                    arg_param = getattr(args, param)
-                    config_param = getattr(config, param)
-                    if arg_param > 0 and arg_param != config_param:
-                        setattr(config, param, arg_param)
+            # update model structure if specified in arguments
+            update_params = ["num_hidden_layers", "hidden_size", "num_attention_heads", "intermediate_size"]
+            for idx, param in enumerate(update_params):
+                arg_param = getattr(args, param)
+                config_param = getattr(config, param)
+                if arg_param > 0 and arg_param != config_param:
+                    setattr(config, param, arg_param)
 
-                # init a transformer encoder and append it to a list
-                assert config.hidden_size % config.num_attention_heads == 0
-                model = model_class(config=config)
-                trans_encoder.append(model)
+            # init a transformer encoder and append it to a list
+            assert config.hidden_size % config.num_attention_heads == 0
+            model = model_class(config=config)
+            trans_encoder.append(model)
 
-            hrnet_yaml = Path(__file__).parent / "data/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml"
-            hrnet_update_config(hrnet_config, hrnet_yaml)
-            backbone = get_cls_net_gridfeat(hrnet_config, pretrained=hrnet_checkpoint)
+        hrnet_yaml = Path(__file__).parent / "data/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml"
+        hrnet_update_config(hrnet_config, hrnet_yaml)
+        backbone = get_cls_net_gridfeat(hrnet_config, pretrained_dict=hrnet_checkpoint)
 
-            trans_encoder = torch.nn.Sequential(*trans_encoder)
+        trans_encoder = torch.nn.Sequential(*trans_encoder)
 
-            # build end-to-end Graphormer network (CNN backbone + multi-layer Graphormer encoder)
-            _model = Graphormer_Network(args, config, backbone, trans_encoder)
-
-            if hand_checkpoint is not None and hand_checkpoint != "None":
-                # for fine-tuning or resume training or inference, load weights from checkpoint
-                # workaround approach to load sparse tensor in graph conv.
-                state_dict = torch.load(hand_checkpoint)
-                _model.load_state_dict(state_dict, strict=False)
-                del state_dict
-                gc.collect()
-                if choose_torch_device() == "cuda":
-                    torch.cuda.empty_cache()
+        # build end-to-end Graphormer network (CNN backbone + multi-layer Graphormer encoder)
+        _model = Graphormer_Network(args, config, backbone, trans_encoder)
+        _model.load_state_dict(hand_checkpoint, strict=False)
 
         # update configs to enable attention outputs
         setattr(_model.trans_encoder[-1].config, "output_attentions", True)

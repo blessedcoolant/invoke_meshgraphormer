@@ -1,6 +1,3 @@
-import gc
-
-import torch
 from invokeai.app.invocations.fields import FieldDescriptions
 from invokeai.app.invocations.primitives import ImageField
 from invokeai.backend.util.devices import choose_torch_device
@@ -18,7 +15,10 @@ from PIL import Image
 
 from .node import MeshGraphormerDetector
 
-meshgraphormer_detector = None
+MESH_GRAPHORMER_MODEL_PATHS = {
+    "graphormer_hand_state_dict.bin": "https://datarelease.blob.core.windows.net/metro/models/graphormer_hand_state_dict.bin",
+    "hrnetv2_w64_imagenet_pretrained.pth": "https://datarelease.blob.core.windows.net/metro/models/hrnetv2_w64_imagenet_pretrained.pth",
+}
 
 
 @invocation_output("meshgraphormer_output")
@@ -46,11 +46,24 @@ class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
     mask_padding: int = InputField(default=30, ge=0, description="Amount to pad the hand mask by")
     offload: bool = InputField(default=False, description="Offload model after usage")
 
-    def run_processor(self, image: Image.Image):
-        global meshgraphormer_detector
+    def load_network(self, context: InvocationContext):
+        hand_model = context.models.load_remote_model(
+            source=MESH_GRAPHORMER_MODEL_PATHS["graphormer_hand_state_dict.bin"]
+        )
+        hrnet_model = context.models.load_remote_model(
+            source=MESH_GRAPHORMER_MODEL_PATHS["hrnetv2_w64_imagenet_pretrained.pth"]
+        )
 
-        if not meshgraphormer_detector:
-            meshgraphormer_detector = MeshGraphormerDetector.load_detector()
+        with hand_model.model_on_device() as (_, hand_state_dict), hrnet_model.model_on_device() as (
+            _,
+            hrnet_state_dict,
+        ):
+            return MeshGraphormerDetector.load_detector(hand_state_dict, hrnet_state_dict)
+
+    def run_processor(self, context: InvocationContext, image: Image.Image):
+        meshgraphormer_detector = MeshGraphormerDetector(
+            detector=self.load_network(context), device=choose_torch_device()
+        )
 
         if image.mode == "RGBA":
             image = image.convert("RGB")
@@ -63,17 +76,11 @@ class HandDepthMeshGraphormerProcessor(BaseInvocation, WithMetadata):
 
         processed_image, mask = meshgraphormer_detector(image=image, mask_bbox_padding=self.mask_padding)
 
-        if self.offload:
-            meshgraphormer_detector = None
-            gc.collect()
-            if choose_torch_device() == "cuda":
-                torch.cuda.empty_cache()
-
         return processed_image, mask
 
     def invoke(self, context: InvocationContext) -> HandDepthOutput:
         raw_image = context.images.get_pil(self.image.image_name, "RGB")
-        processed_image, mask = self.run_processor(raw_image)
+        processed_image, mask = self.run_processor(context, raw_image)
 
         image_dto = context.images.save(processed_image)
         mask_dto = context.images.save(mask)

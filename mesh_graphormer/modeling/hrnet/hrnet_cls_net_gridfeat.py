@@ -9,7 +9,7 @@
 from __future__ import absolute_import, division, print_function
 
 import logging
-import os
+from typing import OrderedDict
 
 import torch
 import torch._utils
@@ -438,7 +438,7 @@ class HighResolutionNet(nn.Module):
 
     def init_weights(
         self,
-        pretrained="",
+        pretrained_dict: OrderedDict[str, torch.Tensor],
     ):
         logger.info("=> init weights from normal distribution")
         for m in self.modules():
@@ -447,18 +447,15 @@ class HighResolutionNet(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
-        if os.path.isfile(pretrained):
-            pretrained_dict = torch.load(pretrained)
-            logger.info("=> loading pretrained model {}".format(pretrained))
-            print("=> loading pretrained model {}".format(pretrained))
-            model_dict = self.state_dict()
-            pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict.keys()}
-            model_dict.update(pretrained_dict)
-            self.load_state_dict(model_dict)
+
+        model_dict = self.state_dict()
+        pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict.keys()}
+        model_dict.update(pretrained_dict)
+        self.load_state_dict(model_dict)
         # code.interact(local=locals())
 
 
-def get_cls_net_gridfeat(config, pretrained, **kwargs):
+def get_cls_net_gridfeat(config, pretrained_dict: OrderedDict[str, torch.Tensor], **kwargs):
     model = HighResolutionNet(config, **kwargs)
-    model.init_weights(pretrained=pretrained)
+    model.init_weights(pretrained_dict=pretrained_dict)
     return model
