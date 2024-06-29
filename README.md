@@ -20,12 +20,7 @@ pip install trimesh rtree yacs
 
 #### Models
 
-The required models will be automatically downloaded to your `root` directory.
-
-If you need to manually download the models, you can get them here from Microsoft and place them in your `INVOKE_ROOT/models/any/annotators/mesh_graphormer`. Do not rename the files.
-
-- `graphormer_hand_state_dict.bin` - [Download](https://datarelease.blob.core.windows.net/metro/models/graphormer_hand_state_dict.bin)
-- `hrnetv2_w64_imagenet_pretrained.pth` - [Download](https://datarelease.blob.core.windows.net/metro/models/hrnetv2_w64_imagenet_pretrained.pth)
+The required models will be automatically downloaded by Invoke's Model Download API.
 
 # Usage
 
