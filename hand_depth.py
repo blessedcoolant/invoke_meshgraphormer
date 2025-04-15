@@ -16,8 +16,8 @@ from PIL import Image
 from .node import MeshGraphormerDetector
 
 MESH_GRAPHORMER_MODEL_PATHS = {
-    "graphormer_hand_state_dict.bin": "https://datarelease.blob.core.windows.net/metro/models/graphormer_hand_state_dict.bin",
-    "hrnetv2_w64_imagenet_pretrained.pth": "https://datarelease.blob.core.windows.net/metro/models/hrnetv2_w64_imagenet_pretrained.pth",
+    "graphormer_hand_state_dict.bin": "https://huggingface.co/hr16/ControlNet-HandRefiner-pruned/blob/main/graphormer_hand_state_dict.bin",
+    "hrnetv2_w64_imagenet_pretrained.pth": "https://huggingface.co/hr16/ControlNet-HandRefiner-pruned/blob/main/hrnetv2_w64_imagenet_pretrained.pth",
 }
 
 
