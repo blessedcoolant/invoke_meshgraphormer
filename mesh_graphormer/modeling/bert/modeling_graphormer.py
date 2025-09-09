@@ -11,7 +11,6 @@ import math
 import torch
 from invokeai.backend.util.devices import choose_torch_device
 from torch import nn
-from transformers.modeling_utils import prune_linear_layer
 from transformers.models.bert.modeling_bert import (
     BertEmbeddings,
     BertIntermediate,
@@ -20,6 +19,7 @@ from transformers.models.bert.modeling_bert import (
     BertPreTrainedModel,
     BertSelfOutput,
 )
+from transformers.pytorch_utils import prune_linear_layer
 
 from ....mesh_graphormer.modeling._gcnn import GraphResBlock
 
