@@ -13,7 +13,7 @@ from invokeai.backend.util.devices import choose_torch_device
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from torchvision import transforms
-from transformers.models.bert.modeling_bert import BertConfig
+from transformers.models.bert.configuration_bert import BertConfig
 from trimesh import Trimesh
 from trimesh.ray.ray_triangle import RayMeshIntersector
 
